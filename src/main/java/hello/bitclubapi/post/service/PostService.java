@@ -38,6 +38,7 @@ public class PostService {
             post.setTitle(updatedPost.getTitle());
             post.setContent(updatedPost.getContent());
             post.setUpdateAt(LocalDateTime.now());
+            post.setAuthor(updatedPost.getAuthor());
             return postRepository.save(post);
         });
     }
