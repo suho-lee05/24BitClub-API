@@ -1,6 +1,6 @@
-package hello.bitclubapi.controller;
-import hello.bitclubapi.entity.User;
-import hello.bitclubapi.repository.UserRepository;
+package hello.bitclubapi.fold.entity.controller;
+import hello.bitclubapi.fold.entity.User;
+import hello.bitclubapi.fold.entity.repository.UserRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 

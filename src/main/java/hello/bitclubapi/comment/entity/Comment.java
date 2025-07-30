@@ -14,7 +14,7 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long postId;
+    private Long postId;    //Post에 있는 id랑 연동시켜야 함
     private String content;
     private String author;
     private LocalDateTime createdAt;

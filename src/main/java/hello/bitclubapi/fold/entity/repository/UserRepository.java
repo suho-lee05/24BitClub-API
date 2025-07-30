@@ -1,6 +1,6 @@
-package hello.bitclubapi.repository;
+package hello.bitclubapi.fold.entity.repository;
 
-import hello.bitclubapi.entity.User;
+import hello.bitclubapi.fold.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserRepository extends JpaRepository<User, Long> {

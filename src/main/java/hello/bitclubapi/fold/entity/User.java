@@ -1,4 +1,4 @@
-package hello.bitclubapi.entity;
+package hello.bitclubapi.fold.entity;
 import jakarta.persistence.*;
 
 @Entity

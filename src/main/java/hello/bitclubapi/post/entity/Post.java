@@ -18,7 +18,7 @@ public class Post {
 
     private String title;
     private String content;
-    private String author;
+    private String author;  //이거 왜 있어야함? 걍 User에 username 가져오면 될듯
 
     private LocalDateTime createdAt;
     private LocalDateTime updateAt;
