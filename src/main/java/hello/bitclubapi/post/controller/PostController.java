@@ -2,13 +2,14 @@ package hello.bitclubapi.post.controller;
 
 import hello.bitclubapi.post.entity.Post;
 import hello.bitclubapi.post.service.PostService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/api/posts")
 public class PostController {
 
@@ -18,42 +19,48 @@ public class PostController {
         this.postService = postService;
     }
 
-    @PostMapping
-    @ResponseBody
-    public ResponseEntity<Post> create(@RequestBody Post post){
-        Post created = postService.create(post);
-        return ResponseEntity.ok(created);
-    }
-
+    /** 1) 전체 게시글 조회*/
     @GetMapping
-    @ResponseBody
-    public ResponseEntity<List<Post>>  getAll(){
-        return ResponseEntity.ok(postService.getAll());
+    public List<Post> getAllPosts() {
+        return postService.getAllPosts();
     }
 
-    @GetMapping("/{id}")
-    @ResponseBody
-    public ResponseEntity<Post> getById(@PathVariable Long id){
-        return postService.getById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    /** 2) 특정 게시글 조회 */
+    @GetMapping("/{postId}")
+    public Post getOne(@PathVariable Long postId) {
+        return postService.getPostById(postId);
     }
 
-    @PutMapping("/{id}")
-    @ResponseBody
-    public ResponseEntity<Post> update(@PathVariable Long id, @RequestBody Post post){
-        return postService.update(id, post)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    @DeleteMapping("/{id}")
-    @ResponseBody
-    public ResponseEntity<Void> delete(@PathVariable Long id){
-        postService.delete(id);
-        return ResponseEntity.ok().build();
+    /** 3) 사용자별 게시글 조회 */
+    @GetMapping("/user/{userId}")
+    public List<Post> listByUser(@PathVariable Long userId) {
+        return postService.getPostsByUser(userId);
     }
 
 
+    /** 4) 게시글 작성 */
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public Post create(@RequestParam Long userId,
+                       @RequestParam String title,
+                       @RequestBody String content) {
+        return postService.createPost(userId, title, content);
+    }
 
+    /** 5) 게시글 수정 */
+    @PutMapping("/{postId}")
+    public Post update(@PathVariable Long postId,
+                       @RequestParam Long userId,
+                       @RequestParam String title,
+                       @RequestBody String content) {
+        return postService.updatePost(postId, userId, title, content);
+    }
+
+    /** 6) 게시글 삭제 */
+    @DeleteMapping("/{postId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long postId,
+                       @RequestParam Long userId) {
+        postService.deletePost(postId, userId);
+    }
 }
