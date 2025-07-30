@@ -1,34 +1,39 @@
 package hello.bitclubapi.comment.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+
+import hello.bitclubapi.fold.entity.User;
+import hello.bitclubapi.post.entity.Post;
+import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
 
 @Entity
+@Table(name = "comment")
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long postId;    //Post에 있는 id랑 연동시켜야 함
+    //댓글이 달린 게시글
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "post_id",nullable = false)
+    private Post post;
+
+    //댓글 작성자
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id",nullable = false)
+    private User user;
+
+    // 댓글 내용
+    @Column(nullable = false, length = 1000)
     private String content;
-    private String author;
+
+    //생성 시각 자동 세팅
+    @CreationTimestamp
+    @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
-
-    public Comment() {
-
-    }
-
-    public Comment(Long postId, String content, String author, LocalDateTime createdAt) {
-        this.postId = postId;
-        this.content = content;
-        this.author = author;
-        this.createdAt = createdAt;
-    }
 
     public Long getId() {
         return id;
@@ -38,12 +43,20 @@ public class Comment {
         this.id = id;
     }
 
-    public Long getPostId() {
-        return postId;
+    public Post getPost() {
+        return post;
     }
 
-    public void setPostId(Long postId) {
-        this.postId = postId;
+    public void setPost(Post post) {
+        this.post = post;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public String getContent() {
@@ -52,14 +65,6 @@ public class Comment {
 
     public void setContent(String content) {
         this.content = content;
-    }
-
-    public String getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
     }
 
     public LocalDateTime getCreatedAt() {
