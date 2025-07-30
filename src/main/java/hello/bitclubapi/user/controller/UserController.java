@@ -17,11 +17,11 @@ public class UserController {
         this.userService = userService;
     }
 
-//    /** 1) 전체 유저 조회 */
-//    @GetMapping
-//    public List<User> listAll() {
-//        return userService.getAllUsers();
-//    }
+    /** 1) 전체 유저 조회 */
+    @GetMapping
+    public List<User> listAll() {
+        return userService.getAllUsers();
+    }
 
     /** 2) 특정 유저 조회 */
     @GetMapping("/{userId}")

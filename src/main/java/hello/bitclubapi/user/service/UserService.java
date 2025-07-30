@@ -15,10 +15,10 @@ public class UserService {
         this.userRepo = userRepo;
     }
 
-//    /** 전체 유저 조회 */
-//    public List<User> getAllUsers() {
-//        return userRepo.findAll();
-//    }
+    /** 전체 유저 조회 */
+    public List<User> getAllUsers() {
+        return userRepo.findAll();
+    }
 
     /** 단일 유저 조회 */
     public User getUser(Long userId) {

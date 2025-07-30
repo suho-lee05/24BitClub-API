@@ -54,6 +54,7 @@ public class PostService {
     }
 
     /** 게시글 수정*/
+    @Transactional
     public Post updatePost(Long postId, Long userId, String newTitle, String newContent) {
         Post post = getPostById(postId);
         if(post.getUser().getId() != userId){

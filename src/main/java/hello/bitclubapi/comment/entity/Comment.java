@@ -1,6 +1,7 @@
 package hello.bitclubapi.comment.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import hello.bitclubapi.user.entity.User;
 import hello.bitclubapi.post.entity.Post;
 import jakarta.persistence.*;
@@ -19,11 +20,13 @@ public class Comment {
     //댓글이 달린 게시글
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "post_id",nullable = false)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Post post;
 
     //댓글 작성자
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id",nullable = false)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private User user;
 
     // 댓글 내용

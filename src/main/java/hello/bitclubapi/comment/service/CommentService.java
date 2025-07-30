@@ -7,8 +7,10 @@ import hello.bitclubapi.post.entity.Post;
 import hello.bitclubapi.post.repository.PostRepository;
 import hello.bitclubapi.user.entity.User;
 import hello.bitclubapi.user.repository.UserRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 
 import java.time.LocalDateTime;
@@ -61,11 +63,14 @@ public class CommentService {
 
    /** 댓글 삭제(delete)*/
    @Transactional
-    public void deleteComment(Long commentId, Long userId) {
+   public void deleteComment(Long commentId, Long userId) {
        Comment comment = commentRepository.findById(commentId)
-               .orElseThrow(()-> new IllegalArgumentException("Comment가 존재하지 않습니다."));
-       if(comment.getUser().getId() != userId){
-           throw new SecurityException("권환이 없습니다.");
+               .orElseThrow(() -> new ResponseStatusException(
+                       HttpStatus.NOT_FOUND, "Comment가 존재하지 않습니다."));
+
+       if (!comment.getUser().getId().equals(userId)) {
+           throw new ResponseStatusException(
+                   HttpStatus.FORBIDDEN, "권한이 없습니다.");
        }
        commentRepository.delete(comment);
    }
