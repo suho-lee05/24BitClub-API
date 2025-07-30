@@ -2,9 +2,10 @@ package hello.bitclubapi.comment.service;
 
 import hello.bitclubapi.comment.entity.Comment;
 import hello.bitclubapi.comment.repository.CommentRepository;
-import hello.bitclubapi.fold.entity.User;
+
 import hello.bitclubapi.post.entity.Post;
 import hello.bitclubapi.post.repository.PostRepository;
+import hello.bitclubapi.user.entity.User;
 import hello.bitclubapi.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

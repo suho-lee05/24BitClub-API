@@ -1,6 +1,6 @@
 package hello.bitclubapi.post.service;
 
-import hello.bitclubapi.fold.entity.User;
+import hello.bitclubapi.user.entity.User;
 import hello.bitclubapi.post.entity.Post;
 import hello.bitclubapi.post.repository.PostRepository;
 import hello.bitclubapi.user.repository.UserRepository;

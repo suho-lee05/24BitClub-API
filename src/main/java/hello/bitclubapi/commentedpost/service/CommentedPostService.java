@@ -2,7 +2,7 @@ package hello.bitclubapi.commentedpost.service;
 
 import hello.bitclubapi.commentedpost.entity.CommentedPost;
 import hello.bitclubapi.commentedpost.repository.CommentedPostRepository;
-import hello.bitclubapi.fold.entity.User;
+import hello.bitclubapi.user.entity.User;
 import hello.bitclubapi.post.entity.Post;
 import hello.bitclubapi.post.repository.PostRepository;
 import hello.bitclubapi.user.repository.UserRepository;

@@ -1,7 +1,7 @@
 package hello.bitclubapi.comment.entity;
 
 
-import hello.bitclubapi.fold.entity.User;
+import hello.bitclubapi.user.entity.User;
 import hello.bitclubapi.post.entity.Post;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
