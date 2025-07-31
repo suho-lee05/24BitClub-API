@@ -1,10 +1,11 @@
 package hello.bitclubapi.likepost.controller;
 
 import hello.bitclubapi.likepost.service.LikePostService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/like-post")
+@RequestMapping("/api/likes")
 public class LikePostController {
 
     private final LikePostService likePostService;
@@ -13,21 +14,21 @@ public class LikePostController {
         this.likePostService = likePostService;
     }
 
-    // 좋아요 누르기
     @PostMapping("/{postId}")
-    public void likePost(@PathVariable Long postId, @RequestHeader("X-USER-ID") Long userId) {
+    public ResponseEntity<Void> like(@PathVariable Long postId, @RequestHeader("X-USER-ID") Long userId) {
         likePostService.likePost(postId, userId);
+        return ResponseEntity.ok().build();
     }
 
-    // 좋아요 취소
     @DeleteMapping("/{postId}")
-    public void unlikePost(@PathVariable Long postId, @RequestHeader("X-USER-ID") Long userId) {
+    public ResponseEntity<Void> unlike(@PathVariable Long postId, @RequestHeader("X-USER-ID") Long userId) {
         likePostService.unlikePost(postId, userId);
+        return ResponseEntity.ok().build();
     }
 
-    // 좋아요 수 조회
-    @GetMapping("/{postId}")
-    public int getLikeCount(@PathVariable Long postId) {
-        return likePostService.getLikeCount(postId);
+    @GetMapping("/{postId}/count")
+    public ResponseEntity<Long> count(@PathVariable Long postId) {
+        long count = likePostService.getLikeCount(postId);
+        return ResponseEntity.ok(count);
     }
 }
