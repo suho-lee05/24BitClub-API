@@ -76,4 +76,9 @@ public class PostService {
         postRepository.delete(post);
     }
 
+    /** 제목으로 포스트 검색 (부분 일치)*/
+    public List<Post> searchByTitle(String keyword){
+        return postRepository.findByTitleContaining(keyword);
+    }
+
 }

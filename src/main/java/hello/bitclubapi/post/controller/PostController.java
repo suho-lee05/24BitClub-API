@@ -63,4 +63,11 @@ public class PostController {
                        @RequestParam Long userId) {
         postService.deletePost(postId, userId);
     }
+
+    /** 7) 키워드 게시물 검색*/
+    @GetMapping("/search")
+    public List<Post> search(@RequestParam("title") String title){
+        return postService.searchByTitle(title);
+    }
+
 }
