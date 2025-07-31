@@ -1,6 +1,9 @@
 package hello.bitclubapi.likepost.entity;
 
+import hello.bitclubapi.post.entity.Post;
+import hello.bitclubapi.user.entity.User;
 import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -11,18 +14,22 @@ public class LikePost {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long postId;     // 게시글 ID (연관관계 매핑 전이라면 이렇게)
-    private Long userId;     // 유저 ID
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_id", nullable = false)
+    private Post post;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     private LocalDateTime likedAt;
 
-    // 기본 생성자 (JPA용)
-    protected LikePost() {}
-
     // 생성자
-    public LikePost(Long postId, Long userId) {
-        this.postId = postId;
-        this.userId = userId;
+    public LikePost() {}
+
+    public LikePost(Post post, User user) {
+        this.post = post;
+        this.user = user;
         this.likedAt = LocalDateTime.now();
     }
 
@@ -31,12 +38,12 @@ public class LikePost {
         return id;
     }
 
-    public Long getPostId() {
-        return postId;
+    public Post getPost() {
+        return post;
     }
 
-    public Long getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
     public LocalDateTime getLikedAt() {
