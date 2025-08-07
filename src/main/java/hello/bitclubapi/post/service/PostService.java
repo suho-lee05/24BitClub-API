@@ -1,6 +1,8 @@
 package hello.bitclubapi.post.service;
 
+import hello.bitclubapi.comment.entity.Comment;
 import hello.bitclubapi.comment.repository.CommentRepository;
+import hello.bitclubapi.commentedpost.repository.CommentedPostRepository;
 import hello.bitclubapi.likepost.repository.LikePostRepository;
 import hello.bitclubapi.post.dto.PostWithStats;
 import hello.bitclubapi.user.entity.User;
@@ -22,12 +24,14 @@ public class PostService {
     private final UserRepository userRepository;
     private final LikePostRepository likePostRepository;
     private final CommentRepository commentRepository;
+    private final CommentedPostRepository commentedPostRepository;
 
-    public PostService(PostRepository postRepository, UserRepository userRepository, LikePostRepository likePostRepository, CommentRepository commentRepository) {
+    public PostService(PostRepository postRepository, UserRepository userRepository, LikePostRepository likePostRepository, CommentRepository commentRepository, CommentedPostRepository commentedPostRepository) {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
         this.likePostRepository = likePostRepository;
         this.commentRepository = commentRepository;
+        this.commentedPostRepository = commentedPostRepository;
     }
 
     /** 모든 게시글 + 통계 한 번에 가져오기 */
@@ -103,5 +107,46 @@ public class PostService {
     public List<Post> searchByTitle(String keyword){
         return postRepository.findByTitleContaining(keyword);
     }
+
+    /** 내가 쓴 댓글 post 찾기*/
+    public List<PostWithStats> getPostsCommentedByUser(Long userId) {
+        return commentRepository.findAllByUser_Id(userId).stream()
+                // 1) Comment → Post 로 매핑 후 중복 제거
+                .map(Comment::getPost)
+                .distinct()
+                .map(p -> {
+                    PostWithStats dto = new PostWithStats();
+                    dto.setPostId(p.getId());
+                    dto.setTitle(p.getTitle());
+                    dto.setUserId(p.getUser().getId());
+                    dto.setUsername(p.getUser().getUsername());
+                    dto.setCreatedAt(p.getCreatedAt());
+                    // 2) Like 수 조회
+                    dto.setLikeCount(likePostRepository.countByPost_Id(p.getId()));
+                    // 3) Comment 수 조회 (CommentRepository의 countByPost_Id)
+                    dto.setCommentCount(commentRepository.countByPost_Id(p.getId()));
+                    return dto;
+                })
+                .toList();
+    }
+
+    /** 내가 좋아요 누른 post 찾기*/
+    public List<PostWithStats> getPostsLikedByUser(Long userId) {
+        return likePostRepository.findAllByUser_Id(userId).stream()
+                .map(lp -> {
+                    Post p = lp.getPost();
+                    PostWithStats dto = new PostWithStats();
+                    dto.setPostId(p.getId());
+                    dto.setTitle(p.getTitle());
+                    dto.setUserId(p.getUser().getId());
+                    dto.setUsername(p.getUser().getUsername());
+                    dto.setCreatedAt(p.getCreatedAt());
+                    dto.setLikeCount(likePostRepository.countByPost_Id(p.getId()));
+                    dto.setCommentCount(commentRepository.countByPost_Id(p.getId()));
+                    return dto;
+                })
+                .toList();
+    }
+
 
 }

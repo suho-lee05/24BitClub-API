@@ -77,4 +77,23 @@ public class PostController {
         return postService.getAllPostsWithStats();
     }
 
+    /**
+     * 내가 댓글 단 모든 게시물 조회
+     * GET /api/posts/commented/user/{userId}
+     */
+    @GetMapping("/commented/user/{userId}")
+    public List<PostWithStats> getPostsCommentedByUser(@PathVariable Long userId) {
+        return postService.getPostsCommentedByUser(userId);
+    }
+
+    /**
+     * 내가 좋아요 누른 모든 게시물 조회
+     * GET /api/posts/liked/user/{userId}
+     */
+    @GetMapping("/liked/user/{userId}")
+    public List<PostWithStats> getPostsLikedByUser(@PathVariable Long userId) {
+        return postService.getPostsLikedByUser(userId);
+    }
+
+
 }

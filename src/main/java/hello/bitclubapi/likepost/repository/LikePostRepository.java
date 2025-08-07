@@ -5,6 +5,7 @@ import hello.bitclubapi.post.entity.Post;
 import hello.bitclubapi.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface LikePostRepository extends JpaRepository<LikePost, Long> {
@@ -15,4 +16,5 @@ public interface LikePostRepository extends JpaRepository<LikePost, Long> {
 
     long countByPost_Id(Long postId);
 
+    List<LikePost> findAllByUser_Id(Long userId);
 }
