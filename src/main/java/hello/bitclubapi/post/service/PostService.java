@@ -1,5 +1,8 @@
 package hello.bitclubapi.post.service;
 
+import hello.bitclubapi.comment.repository.CommentRepository;
+import hello.bitclubapi.likepost.repository.LikePostRepository;
+import hello.bitclubapi.post.dto.PostWithStats;
 import hello.bitclubapi.user.entity.User;
 import hello.bitclubapi.post.entity.Post;
 import hello.bitclubapi.post.repository.PostRepository;
@@ -17,10 +20,30 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final UserRepository userRepository;
+    private final LikePostRepository likePostRepository;
+    private final CommentRepository commentRepository;
 
-    public PostService(PostRepository postRepository, UserRepository userRepository) {
+    public PostService(PostRepository postRepository, UserRepository userRepository, LikePostRepository likePostRepository, CommentRepository commentRepository) {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
+        this.likePostRepository = likePostRepository;
+        this.commentRepository = commentRepository;
+    }
+
+    /** 모든 게시글 + 통계 한 번에 가져오기 */
+    public List<PostWithStats> getAllPostsWithStats() {
+        List<Post> posts = postRepository.findAll();
+        return posts.stream().map(p -> {
+            PostWithStats dto = new PostWithStats();
+            dto.setPostId(p.getId());
+            dto.setTitle(p.getTitle());
+            dto.setUserId(p.getUser().getId());
+            dto.setUsername(p.getUser().getUsername());
+            dto.setCreatedAt(p.getCreatedAt());
+            dto.setLikeCount(likePostRepository.countByPost_Id(p.getId()));
+            dto.setCommentCount(commentRepository.countByPost_Id(p.getId()));
+            return dto;
+        }).toList();
     }
 
     /**전체 게시글 조회*/

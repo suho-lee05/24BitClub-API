@@ -1,5 +1,6 @@
 package hello.bitclubapi.post.controller;
 
+import hello.bitclubapi.post.dto.PostWithStats;
 import hello.bitclubapi.post.entity.Post;
 import hello.bitclubapi.post.service.PostService;
 import org.springframework.http.HttpStatus;
@@ -19,11 +20,11 @@ public class PostController {
         this.postService = postService;
     }
 
-    /** 1) 전체 게시글 조회*/
-    @GetMapping
-    public List<Post> getAllPosts() {
-        return postService.getAllPosts();
-    }
+//    /** 1) 전체 게시글 조회*/
+//    @GetMapping
+//    public List<Post> getAllPosts() {
+//        return postService.getAllPosts();
+//    }
 
     /** 2) 특정 게시글 조회 */
     @GetMapping("/{postId}")
@@ -68,6 +69,12 @@ public class PostController {
     @GetMapping("/search")
     public List<Post> search(@RequestParam("title") String title){
         return postService.searchByTitle(title);
+    }
+
+    /** 기존 listAll 대신, 메타까지 포함된 리스트를 반환 */
+    @GetMapping
+    public List<PostWithStats> listAllWithStats() {
+        return postService.getAllPostsWithStats();
     }
 
 }
