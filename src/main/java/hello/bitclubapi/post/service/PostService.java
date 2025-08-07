@@ -10,6 +10,8 @@ import hello.bitclubapi.post.entity.Post;
 import hello.bitclubapi.post.repository.PostRepository;
 import hello.bitclubapi.user.repository.UserRepository;
 import hello.bitclubapi.user.service.UserService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,19 +37,33 @@ public class PostService {
     }
 
     /** 모든 게시글 + 통계 한 번에 가져오기 */
-    public List<PostWithStats> getAllPostsWithStats() {
-        List<Post> posts = postRepository.findAll();
-        return posts.stream().map(p -> {
-            PostWithStats dto = new PostWithStats();
-            dto.setPostId(p.getId());
-            dto.setTitle(p.getTitle());
-            dto.setUserId(p.getUser().getId());
-            dto.setUsername(p.getUser().getUsername());
-            dto.setCreatedAt(p.getCreatedAt());
-            dto.setLikeCount(likePostRepository.countByPost_Id(p.getId()));
-            dto.setCommentCount(commentRepository.countByPost_Id(p.getId()));
-            return dto;
-        }).toList();
+//    public List<PostWithStats> getAllPostsWithStats() {
+//        List<Post> posts = postRepository.findAll();
+//        return posts.stream().map(p -> {
+//            PostWithStats dto = new PostWithStats();
+//            dto.setPostId(p.getId());
+//            dto.setTitle(p.getTitle());
+//            dto.setUserId(p.getUser().getId());
+//            dto.setUsername(p.getUser().getUsername());
+//            dto.setCreatedAt(p.getCreatedAt());
+//            dto.setLikeCount(likePostRepository.countByPost_Id(p.getId()));
+//            dto.setCommentCount(commentRepository.countByPost_Id(p.getId()));
+//            return dto;
+//        }).toList();
+//    }
+    public Page<PostWithStats> getAllPostsWithStats(Pageable pageable) {
+        return postRepository.findAll(pageable)
+                .map(p -> {
+                    PostWithStats dto = new PostWithStats();
+                    dto.setPostId(p.getId());
+                    dto.setTitle(p.getTitle());
+                    dto.setUserId(p.getUser().getId());
+                    dto.setUsername(p.getUser().getUsername());
+                    dto.setCreatedAt(p.getCreatedAt());
+                    dto.setLikeCount(likePostRepository.countByPost_Id(p.getId()));
+                    dto.setCommentCount(commentRepository.countByPost_Id(p.getId()));
+                    return dto;
+                });
     }
 
     /**전체 게시글 조회*/

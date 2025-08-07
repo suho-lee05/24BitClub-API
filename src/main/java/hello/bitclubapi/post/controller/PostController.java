@@ -3,6 +3,10 @@ package hello.bitclubapi.post.controller;
 import hello.bitclubapi.post.dto.PostWithStats;
 import hello.bitclubapi.post.entity.Post;
 import hello.bitclubapi.post.service.PostService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -71,10 +75,20 @@ public class PostController {
         return postService.searchByTitle(title);
     }
 
-    /** 기존 listAll 대신, 메타까지 포함된 리스트를 반환 */
+    /**
+     * 메인 화면: 전체 게시글 + 통계 (페이징)
+     * GET /api/posts?page=0&size=10&sort=createdAt,desc
+     */
     @GetMapping
-    public List<PostWithStats> listAllWithStats() {
-        return postService.getAllPostsWithStats();
+    public Page<PostWithStats> listAllWithStats(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "createdAt,desc") String sort
+    ) {
+        String[] parts = sort.split(",");
+        Pageable pageable = PageRequest.of(page, size,
+                Sort.by(Sort.Direction.fromString(parts[1]), parts[0]));
+        return postService.getAllPostsWithStats(pageable);
     }
 
     /**
@@ -94,6 +108,8 @@ public class PostController {
     public List<PostWithStats> getPostsLikedByUser(@PathVariable Long userId) {
         return postService.getPostsLikedByUser(userId);
     }
+
+
 
 
 }
