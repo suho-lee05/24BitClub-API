@@ -1,5 +1,6 @@
 package hello.bitclubapi.post.controller;
 
+import hello.bitclubapi.post.dto.PostDetail;
 import hello.bitclubapi.post.dto.PostWithStats;
 import hello.bitclubapi.post.entity.Post;
 import hello.bitclubapi.post.service.PostService;
@@ -30,10 +31,13 @@ public class PostController {
 //        return postService.getAllPosts();
 //    }
 
-    /** 2) 특정 게시글 조회 */
+    /** 2) 게시글 상세 조회 */
     @GetMapping("/{postId}")
-    public Post getOne(@PathVariable Long postId) {
-        return postService.getPostById(postId);
+    public PostDetail getOne(
+            @PathVariable Long postId,
+            @RequestHeader(value = "X-USER-ID", required = false) Long userId
+    ) {
+        return postService.getPostDetail(postId, userId);
     }
 
     /** 3) 내 게시물 조회 */
@@ -81,6 +85,9 @@ public class PostController {
     public List<Post> search(@RequestParam("title") String title){
         return postService.searchByTitle(title);
     }
+
+
+
 
     /**
      * 메인 화면: 전체 게시글 + 통계 (페이징)

@@ -4,6 +4,7 @@ import hello.bitclubapi.comment.entity.Comment;
 import hello.bitclubapi.comment.repository.CommentRepository;
 import hello.bitclubapi.commentedpost.repository.CommentedPostRepository;
 import hello.bitclubapi.likepost.repository.LikePostRepository;
+import hello.bitclubapi.post.dto.PostDetail;
 import hello.bitclubapi.post.dto.PostWithStats;
 import hello.bitclubapi.user.entity.User;
 import hello.bitclubapi.post.entity.Post;
@@ -178,5 +179,23 @@ public class PostService {
 
 
 
+    //게시글 상세 요청
+    public PostDetail getPostDetail(Long postId, Long viewerUserId) {
+        Post p = postRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("Post not found: " + postId));
+
+        PostDetail dto = new PostDetail();
+        dto.setPostId(p.getId());
+        dto.setTitle(p.getTitle());
+        dto.setContent(p.getContent());
+        dto.setUserId(p.getUser().getId());
+        dto.setUsername(p.getUser().getUsername());
+        dto.setCreatedAt(p.getCreatedAt());
+
+        dto.setLikeCount(likePostRepository.countByPost_Id(postId));
+        dto.setCommentCount(commentRepository.countByPost_Id(postId));
+
+        return dto;
+    }
 
 }

@@ -2,8 +2,10 @@ package hello.bitclubapi.comment.repository;
 
 import ch.qos.logback.core.status.Status;
 import hello.bitclubapi.comment.entity.Comment;
+import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
@@ -18,4 +20,5 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     /** ① 특정 사용자(userId)가 단 모든 댓글 조회 */
     List<Comment> findAllByUser_Id(Long userId);
 
+    Page<Comment> findAllByPost_Id(Long postId, Pageable pageable);
 }
