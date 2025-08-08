@@ -145,6 +145,7 @@ public class PostService {
                 .distinct()
                 .map(p -> {
                     PostWithStats dto = new PostWithStats();
+
                     dto.setPostId(p.getId());
                     dto.setTitle(p.getTitle());
                     dto.setUserId(p.getUser().getId());
@@ -197,5 +198,21 @@ public class PostService {
 
         return dto;
     }
+
+    public Page<PostWithStats> searchByTitle(String keyword, Pageable pageable) {
+        return postRepository.findByTitleContaining(keyword, pageable)
+                .map(p -> {
+                    PostWithStats dto = new PostWithStats();
+                    dto.setPostId(p.getId());
+                    dto.setTitle(p.getTitle());
+                    dto.setUserId(p.getUser().getId());
+                    dto.setUsername(p.getUser().getUsername());
+                    dto.setCreatedAt(p.getCreatedAt());
+                    dto.setLikeCount(likePostRepository.countByPost_Id(p.getId()));
+                    dto.setCommentCount(commentRepository.countByPost_Id(p.getId()));
+                    return dto;
+                });
+    }
+
 
 }

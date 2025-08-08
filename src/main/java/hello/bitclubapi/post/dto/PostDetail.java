@@ -21,8 +21,8 @@ public class PostDetail {
     public PostDetail() {
     }
 
-    public PostDetail(Long postId, String title, String content, Long userId, String username, LocalDateTime createdAt, long likeCount, long commentCount, Boolean likedByMe) {
-        this.postId = postId;
+    public PostDetail(Long postid, String title, String content, Long userId, String username, LocalDateTime createdAt, long likeCount, long commentCount, Boolean likedByMe) {
+        this.postId = postid;
         this.title = title;
         this.content = content;
         this.userId = userId;

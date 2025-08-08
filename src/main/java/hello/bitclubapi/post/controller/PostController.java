@@ -82,10 +82,18 @@ public class PostController {
 
     /** 7) 키워드 게시물 검색*/
     @GetMapping("/search")
-    public List<Post> search(@RequestParam("title") String title){
-        return postService.searchByTitle(title);
+    public Page<PostWithStats> search(
+            @RequestParam("title") String title,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "createdAt,desc") String sort
+    ) {
+        String[] parts = sort.split(",");
+        var pageable = PageRequest.of(
+                page, size, Sort.by(Sort.Direction.fromString(parts[1]), parts[0])
+        );
+        return postService.searchByTitle(title, pageable);
     }
-
 
 
 
