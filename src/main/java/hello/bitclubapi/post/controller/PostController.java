@@ -36,9 +36,16 @@ public class PostController {
         return postService.getPostById(postId);
     }
 
-    /** 3) 사용자별 게시글 조회 */
+    /** 3) 내 게시물 조회 */
+//    @GetMapping("/user/{userId}")
+//    public List<Post> listByUser(@PathVariable Long userId) {
+//        return postService.getPostsByUser(userId);
+//    }
+    /**
+     * 내 게시물 조회
+     */
     @GetMapping("/user/{userId}")
-    public List<Post> listByUser(@PathVariable Long userId) {
+    public List<PostWithStats> listByUser(@PathVariable Long userId) {
         return postService.getPostsByUser(userId);
     }
 
@@ -108,6 +115,7 @@ public class PostController {
     public List<PostWithStats> getPostsLikedByUser(@PathVariable Long userId) {
         return postService.getPostsLikedByUser(userId);
     }
+
 
 
 

@@ -77,9 +77,21 @@ public class PostService {
                 .orElseThrow(()-> new RuntimeException("Post not found"));
     }
 
-    /** 특정 사용자 게시글 목록 */
-    public List<Post> getPostsByUser(Long userId) {
-        return postRepository.findAllByUser_Id(userId);
+    /** 내가 쓴 게시물 목록 */
+    public List<PostWithStats> getPostsByUser(Long userId) {
+        return postRepository.findAllByUser_Id(userId).stream()
+                .map(p -> {
+                    PostWithStats dto = new PostWithStats();
+                    dto.setPostId(p.getId());
+                    dto.setTitle(p.getTitle());
+                    dto.setUserId(p.getUser().getId());
+                    dto.setUsername(p.getUser().getUsername());
+                    dto.setCreatedAt(p.getCreatedAt());
+                    dto.setLikeCount(likePostRepository.countByPost_Id(p.getId()));
+                    dto.setCommentCount(commentRepository.countByPost_Id(p.getId()));
+                    return dto;
+                })
+                .toList();
     }
 
     /** 게시글 작성*/
@@ -163,6 +175,8 @@ public class PostService {
                 })
                 .toList();
     }
+
+
 
 
 }
