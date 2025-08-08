@@ -1,5 +1,6 @@
 package hello.bitclubapi.comment.service;
 
+import hello.bitclubapi.comment.dto.CommentDto;
 import hello.bitclubapi.comment.entity.Comment;
 import hello.bitclubapi.comment.repository.CommentRepository;
 
@@ -74,6 +75,27 @@ public class CommentService {
        }
        commentRepository.delete(comment);
    }
+
+
+    /** 게시글 상세: 댓글 전체 목록 (페이징 없음) */
+    public List<CommentDto> getCommentsForPost(Long postId, String sort, Long viewerUserId) {
+        boolean asc = "asc".equalsIgnoreCase(sort);
+
+        List<Comment> comments = asc
+                ? commentRepository.findAllByPost_IdOrderByCreatedAtAsc(postId)
+                : commentRepository.findAllByPost_IdOrderByCreatedAtDesc(postId);
+
+        return comments.stream().map(c -> {
+            CommentDto dto = new CommentDto();
+            dto.setCommentId(c.getId());
+            dto.setUserId(c.getUser().getId());
+            dto.setUsername(c.getUser().getUsername());
+            dto.setContent(c.getContent());
+            dto.setCreatedAt(c.getCreatedAt());
+            dto.setMine(viewerUserId != null && c.getUser().getId().equals(viewerUserId));
+            return dto;
+        }).toList();
+    }
 
 
 

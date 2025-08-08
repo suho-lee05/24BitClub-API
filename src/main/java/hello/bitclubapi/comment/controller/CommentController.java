@@ -1,5 +1,6 @@
 package hello.bitclubapi.comment.controller;
 
+import hello.bitclubapi.comment.dto.CommentDto;
 import hello.bitclubapi.comment.entity.Comment;
 import hello.bitclubapi.comment.service.CommentService;
 import org.springframework.http.HttpStatus;
@@ -20,11 +21,11 @@ public class CommentController {
         this.commentService = commentService;
     }
 
-    /** 1) 게시글 댓글 전체 조회*/
-    @GetMapping
-    public List<Comment> list (@PathVariable Long postId) {
-        return commentService.getCommentsByPost(postId);
-    }
+//    /** 1) 게시글 댓글 전체 조회*/
+//    @GetMapping
+//    public List<Comment> list (@PathVariable Long postId) {
+//        return commentService.getCommentsByPost(postId);
+//    }
 
     /** 2) 댓글 작성 */
     @PostMapping
@@ -49,6 +50,16 @@ public class CommentController {
                        @PathVariable Long commentId,
                        @RequestParam Long userId) {
         commentService.deleteComment(commentId, userId);
+    }
+
+    /** 게시글 상세: 댓글 목록 (기본 최신순), 페이징 없음 */
+    @GetMapping
+    public List<CommentDto> list(
+            @PathVariable Long postId,
+            @RequestParam(defaultValue = "desc") String sort, // asc|desc
+            @RequestHeader(value = "X-USER-ID", required = false) Long userId
+    ) {
+        return commentService.getCommentsForPost(postId, sort, userId);
     }
 
 }

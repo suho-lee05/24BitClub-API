@@ -3,6 +3,7 @@ package hello.bitclubapi.comment.repository;
 import ch.qos.logback.core.status.Status;
 import hello.bitclubapi.comment.entity.Comment;
 import org.springframework.data.domain.Page;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import org.springframework.data.domain.Pageable;
@@ -21,4 +22,11 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     List<Comment> findAllByUser_Id(Long userId);
 
     Page<Comment> findAllByPost_Id(Long postId, Pageable pageable);
+
+    @EntityGraph(attributePaths = {"user"}) // N+1 방지: 댓글과 작성자 같이 로드
+    List<Comment> findAllByPost_IdOrderByCreatedAtDesc(Long postId);
+
+    @EntityGraph(attributePaths = {"user"})
+    List<Comment> findAllByPost_IdOrderByCreatedAtAsc(Long postId);
+
 }
