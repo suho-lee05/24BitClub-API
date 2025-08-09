@@ -14,6 +14,7 @@ public class User {
 
     @Column(nullable = false, length = 100)
     private String password;
+    private String role = "USER";
 
     public User() {
     }

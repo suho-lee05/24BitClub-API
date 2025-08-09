@@ -3,6 +3,7 @@ package hello.bitclubapi.user.service;
 import hello.bitclubapi.user.entity.User;
 import hello.bitclubapi.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,9 +11,11 @@ import java.util.List;
 @Service
 public class UserService {
     private final UserRepository userRepo;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepo) {
+    public UserService(UserRepository userRepo, PasswordEncoder passwordEncoder) {
         this.userRepo = userRepo;
+        this.passwordEncoder = passwordEncoder;
     }
 
     /** 전체 유저 조회 */
@@ -28,13 +31,13 @@ public class UserService {
 
     /** 유저 생성 */
     @Transactional
-    public User createUser(String username, String password) {
+    public User createUser(String username, String rawPassword) {
         if (userRepo.existsByUsername(username)) {
             throw new IllegalArgumentException("Username already taken: " + username);
         }
         User u = new User();
         u.setUsername(username);
-        u.setPassword(password);
+        u.setPassword(passwordEncoder.encode(rawPassword)); // 🔐 해시 저장
         return userRepo.save(u);
     }
 
@@ -56,4 +59,8 @@ public class UserService {
         User u = getUser(userId);
         userRepo.delete(u);
     }
+
+
+
+
 }
