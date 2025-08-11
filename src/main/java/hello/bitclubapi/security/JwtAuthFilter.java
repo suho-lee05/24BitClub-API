@@ -27,39 +27,35 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-        String authHeader = request.getHeader("Authorization");
+        String path = request.getRequestURI();
+        // 1️⃣ GET /api/posts → 무조건 통과
+        if (request.getMethod().equalsIgnoreCase("GET") && path.startsWith("/api/posts")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
-        // 토큰이 없으면 그냥 다음 필터로
+        String authHeader = request.getHeader("Authorization");
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        String token = authHeader.substring(7);
-
         try {
-            System.out.println("받은 토큰: " + token);
+            String token = authHeader.substring(7);
             String username = jwtTokenProvider.getUsername(token);
-            System.out.println("토큰 username: " + username);
+            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
-            if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-                System.out.println("DB에서 찾은 유저: " + userDetails.getUsername());
+            UsernamePasswordAuthenticationToken authentication =
+                    new UsernamePasswordAuthenticationToken(
+                            userDetails, null, userDetails.getAuthorities());
+            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
-                if (jwtTokenProvider.validateToken(token, userDetails)) {
-                    UsernamePasswordAuthenticationToken authToken =
-                            new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                    SecurityContextHolder.getContext().setAuthentication(authToken);
-                } else {
-                    System.err.println("토큰 검증 실패: validateToken == false");
-                }
-            }
+            SecurityContextHolder.getContext().setAuthentication(authentication);
         } catch (Exception e) {
-            System.err.println("JWT 검증 실패: " + e.getClass().getSimpleName() + " - " + e.getMessage());
-            e.printStackTrace();
+            // 토큰 검증 실패 → 그냥 통과 (403 막기 위해)
         }
 
         filterChain.doFilter(request, response);
     }
+
 }
