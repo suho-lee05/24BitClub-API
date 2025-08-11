@@ -31,6 +31,7 @@ public class CommentService {
     }
 
     /** 댓글 목록 조회(모든 댓글)*/
+    @Transactional
    public List<Comment> getCommentsByPost(Long postId) {
        return commentRepository.findAllByPost_Id(postId);
    }
