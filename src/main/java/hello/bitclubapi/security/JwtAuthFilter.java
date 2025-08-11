@@ -34,6 +34,12 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             return;
         }
 
+        String path = request.getRequestURI();
+        if (request.getMethod().equals("GET") && path.startsWith("/api/posts")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         try {
             String token = authHeader.substring(7);
             String username = jwtTokenProvider.getUsername(token);
