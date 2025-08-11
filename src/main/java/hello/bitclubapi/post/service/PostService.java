@@ -52,6 +52,7 @@ public class PostService {
 //            return dto;
 //        }).toList();
 //    }
+    @Transactional
     public Page<PostWithStats> getAllPostsWithStats(Pageable pageable) {
         return postRepository.findAll(pageable)
                 .map(p -> {
@@ -68,17 +69,20 @@ public class PostService {
     }
 
     /**전체 게시글 조회*/
+    @Transactional
     public List<Post> getAllPosts() {
         return postRepository.findAll();
     }
 
     /** 특정 게시글 조회*/
+    @Transactional
     public Post getPostById(Long postId) {
         return postRepository.findById(postId)
                 .orElseThrow(()-> new RuntimeException("Post not found"));
     }
 
     /** 내가 쓴 게시물 목록 */
+    @Transactional
     public List<PostWithStats> getPostsByUser(Long userId) {
         return postRepository.findAllByUser_Id(userId).stream()
                 .map(p -> {
@@ -133,11 +137,13 @@ public class PostService {
     }
 
     /** 제목으로 포스트 검색 (부분 일치)*/
+    @Transactional
     public List<Post> searchByTitle(String keyword){
         return postRepository.findByTitleContaining(keyword);
     }
 
     /** 내가 쓴 댓글 post 찾기*/
+    @Transactional
     public List<PostWithStats> getPostsCommentedByUser(Long userId) {
         return commentRepository.findAllByUser_Id(userId).stream()
                 // 1) Comment → Post 로 매핑 후 중복 제거
@@ -161,6 +167,7 @@ public class PostService {
     }
 
     /** 내가 좋아요 누른 post 찾기*/
+    @Transactional
     public List<PostWithStats> getPostsLikedByUser(Long userId) {
         return likePostRepository.findAllByUser_Id(userId).stream()
                 .map(lp -> {
@@ -181,6 +188,7 @@ public class PostService {
 
 
     //게시글 상세 요청
+    @Transactional
     public PostDetail getPostDetail(Long postId, Long viewerUserId) {
         Post p = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("Post not found: " + postId));
@@ -199,6 +207,7 @@ public class PostService {
         return dto;
     }
 
+    @Transactional
     public Page<PostWithStats> searchByTitle(String keyword, Pageable pageable) {
         return postRepository.findByTitleContaining(keyword, pageable)
                 .map(p -> {
