@@ -29,31 +29,29 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         String authHeader = request.getHeader("Authorization");
 
+        // 토큰이 없으면 그냥 다음 필터로
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        String path = request.getRequestURI();
-        if (request.getMethod().equals("GET") && path.startsWith("/api/posts")) {
-            filterChain.doFilter(request, response);
-            return;
-        }
+        String token = authHeader.substring(7);
 
         try {
-            String token = authHeader.substring(7);
             String username = jwtTokenProvider.getUsername(token);
-            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
-            UsernamePasswordAuthenticationToken authentication =
-                    new UsernamePasswordAuthenticationToken(
-                            userDetails, null, userDetails.getAuthorities());
-            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+            if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+                if (jwtTokenProvider.validateToken(token, userDetails)) {
+                    UsernamePasswordAuthenticationToken authToken =
+                            new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authToken);
+                }
+            }
         } catch (Exception e) {
-            filterChain.doFilter(request, response);
-            return;
+            System.err.println("JWT 검증 실패: " + e.getMessage());
         }
 
         filterChain.doFilter(request, response);
