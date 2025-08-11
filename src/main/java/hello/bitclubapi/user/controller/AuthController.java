@@ -35,16 +35,18 @@ public class AuthController {
     /** 회원가입 */
     @PostMapping("/signup")
     @ResponseStatus(HttpStatus.CREATED)
-    public String signup(@RequestBody LoginRequest req) {
+    public Map<String, String> signup(@RequestBody LoginRequest req) {
         if (userRepo.existsByUsername(req.getUsername())) {
-            return "Username already exists";
+            return Map.of("message", "Username already exists");
         }
         User u = new User();
         u.setUsername(req.getUsername());
-        u.setPassword(passwordEncoder.encode(req.getPassword())); // 해시 저장
+        u.setPassword(passwordEncoder.encode(req.getPassword()));
         userRepo.save(u);
-        return "Signup success";
+        return Map.of("message", "Signup success");
     }
+
+
 
     /** 로그인 → JWT 발급 */
     @PostMapping("/login")
