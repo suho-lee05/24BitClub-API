@@ -43,6 +43,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             return;
         }
 
+
         String token = authHeader.substring(7);
         log.debug("추출한 토큰: {}", token);
 
