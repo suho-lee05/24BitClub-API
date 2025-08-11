@@ -5,6 +5,7 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.security.Key;
 import java.util.Date;
@@ -19,7 +20,6 @@ public class JwtTokenProvider {
             @Value("${jwt.secret}") String secret,
             @Value("${jwt.exp-ms:3600000}") long expMs
     ) {
-        // secret은 Base64 인코딩된 256비트 이상 키여야 함
         this.key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
         this.expMs = expMs;
     }
@@ -45,9 +45,14 @@ public class JwtTokenProvider {
                 .getSubject();
     }
 
-    public boolean validateToken(String token, org.springframework.security.core.userdetails.UserDetails userDetails) {
-        final String username = getUsername(token);
-        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+    // ✅ 토큰 유효성 검증 메서드 추가
+    public boolean validateToken(String token, UserDetails userDetails) {
+        try {
+            String username = getUsername(token);
+            return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
+        } catch (JwtException | IllegalArgumentException e) {
+            return false;
+        }
     }
 
     private boolean isTokenExpired(String token) {
