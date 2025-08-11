@@ -4,6 +4,11 @@ spring:
     username: ${MYSQLUSER}
     password: ${MYSQLPASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      connection-timeout: 30000 # 30초까지 대기
+      validation-timeout: 5000  # 5초 안에 연결 확인
+      maximum-pool-size: 5
+      initialization-fail-timeout: -1 # 초기 연결 실패해도 재시도
 
   jpa:
     hibernate:
