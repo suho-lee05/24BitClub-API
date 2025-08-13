@@ -1,0 +1,21 @@
+{
+  "files": {
+    "main.css": "/24BitClub-React/static/css/main.49c21bf8.css",
+    "main.js": "/24BitClub-React/static/js/main.dd1e2ac3.js",
+    "static/js/453.983ceca6.chunk.js": "/24BitClub-React/static/js/453.983ceca6.chunk.js",
+    "static/media/heart filled.png": "/24BitClub-React/static/media/heart filled.1c0c4f6502f3822ac214.png",
+    "static/media/author-profile.png": "/24BitClub-React/static/media/author-profile.5ce397ff2d65db87b00a.png",
+    "static/media/profile.png": "/24BitClub-React/static/media/profile.5ce397ff2d65db87b00a.png",
+    "static/media/heart.png": "/24BitClub-React/static/media/heart.c412cbaead4744166c20.png",
+    "static/media/setting.png": "/24BitClub-React/static/media/setting.fdbe5309dc224a71527a.png",
+    "static/media/chat.png": "/24BitClub-React/static/media/chat.5dd0968617bc2ebb4f70.png",
+    "index.html": "/24BitClub-React/index.html",
+    "main.49c21bf8.css.map": "/24BitClub-React/static/css/main.49c21bf8.css.map",
+    "main.dd1e2ac3.js.map": "/24BitClub-React/static/js/main.dd1e2ac3.js.map",
+    "453.983ceca6.chunk.js.map": "/24BitClub-React/static/js/453.983ceca6.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.49c21bf8.css",
+    "static/js/main.dd1e2ac3.js"
+  ]
+}
