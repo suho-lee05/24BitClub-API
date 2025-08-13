@@ -203,6 +203,9 @@ public class PostService {
 
         dto.setLikeCount(likePostRepository.countByPost_Id(postId));
         dto.setCommentCount(commentRepository.countByPost_Id(postId));
+        boolean liked = (viewerUserId != null) &&
+                likePostRepository.existsByPost_IdAndUser_Id(postId, viewerUserId);
+        dto.setLikedByMe(liked);
 
         return dto;
     }
