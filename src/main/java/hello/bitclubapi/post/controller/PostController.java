@@ -76,23 +76,7 @@ public class PostController {
     public PostDetail update(@PathVariable Long postId,
                              @RequestHeader("X-USER-ID") Long userId,
                              @RequestBody UpdatePostRequest req) {
-        Post updated = postService.updatePost(postId, userId, req.title(), req.content());
-
-        long likeCount    = likePostRepository.countByPost_Id(updated.getId());
-        long commentCount = commentRepository.countByPost_Id(updated.getId());
-        boolean likedByMe = likePostRepository.existsByPost_IdAndUser_Id(updated.getId(), userId);
-
-        return new PostDetail(
-                updated.getId(),
-                updated.getTitle(),
-                updated.getContent(),
-                updated.getUser().getId(),
-                updated.getUser().getUsername(),
-                updated.getCreatedAt(),
-                likeCount,
-                commentCount,
-                likedByMe
-        );
+        return postService.updatePost(postId, userId, req.title(), req.content());
     }
 
     /** 6) 게시글 삭제 */
