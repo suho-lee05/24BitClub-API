@@ -30,7 +30,7 @@ public class CommentController {
     /** 2) 댓글 작성 */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Comment create (@PathVariable Long postId, @RequestParam Long userId, @RequestBody String content) {
+    public Comment create (@PathVariable Long postId, @RequestHeader("X-USER-ID") Long userId, @RequestBody String content) {
         return commentService.addComment(userId, postId, content);
     }
 
