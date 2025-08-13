@@ -1,7 +1,10 @@
 package hello.bitclubapi.post.controller;
 
+import hello.bitclubapi.comment.repository.CommentRepository;
+import hello.bitclubapi.likepost.repository.LikePostRepository;
 import hello.bitclubapi.post.dto.PostDetail;
 import hello.bitclubapi.post.dto.PostWithStats;
+import hello.bitclubapi.post.dto.UpdatePostRequest;
 import hello.bitclubapi.post.entity.Post;
 import hello.bitclubapi.post.service.PostService;
 import org.springframework.data.domain.Page;
@@ -21,11 +24,16 @@ public class PostController {
 
     private final PostService postService;
 
-    public PostController(PostService postService) {
+    private final LikePostRepository likePostRepository;
+    private final CommentRepository commentRepository;
+
+    public PostController(PostService postService, LikePostRepository likePostRepository, CommentRepository commentRepository) {
         this.postService = postService;
+        this.likePostRepository = likePostRepository;
+        this.commentRepository = commentRepository;
     }
 
-//    /** 1) 전체 게시글 조회*/
+    //    /** 1) 전체 게시글 조회*/
 //    @GetMapping
 //    public List<Post> getAllPosts() {
 //        return postService.getAllPosts();
@@ -65,11 +73,10 @@ public class PostController {
 
     /** 5) 게시글 수정 */
     @PutMapping("/{postId}")
-    public Post update(@PathVariable Long postId,
-                       @RequestParam Long userId,
-                       @RequestParam String title,
-                       @RequestBody String content) {
-        return postService.updatePost(postId, userId, title, content);
+    public PostDetail update(@PathVariable Long postId,
+                             @RequestHeader("X-USER-ID") Long userId,
+                             @RequestBody UpdatePostRequest req) {
+        return postService.updatePost(postId, userId, req.title(), req.content());
     }
 
     /** 6) 게시글 삭제 */

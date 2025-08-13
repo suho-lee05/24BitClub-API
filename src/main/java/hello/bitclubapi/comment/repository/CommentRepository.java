@@ -29,4 +29,6 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     @EntityGraph(attributePaths = {"user"})
     List<Comment> findAllByPost_IdOrderByCreatedAtAsc(Long postId);
 
+
+
 }

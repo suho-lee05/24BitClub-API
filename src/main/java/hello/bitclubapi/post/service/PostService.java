@@ -115,14 +115,33 @@ public class PostService {
 
     /** 게시글 수정*/
     @Transactional
-    public Post updatePost(Long postId, Long userId, String newTitle, String newContent) {
-        Post post = getPostById(postId);
-        if(post.getUser().getId() != userId){
-            throw new SecurityException("권환이 없습니다.");
+    public PostDetail updatePost(Long postId, Long userId, String newTitle, String newContent) {
+        // join fetch로 User까지 한 번에 로딩
+        Post post = postRepository.findByIdWithUser(postId)
+                .orElseThrow(() -> new IllegalArgumentException("게시글 없음"));
+
+        if (!post.getUser().getId().equals(userId)) {
+            throw new SecurityException("권한이 없습니다.");
         }
+
         post.setTitle(newTitle);
         post.setContent(newContent);
-        return post;
+
+        long likeCount = likePostRepository.countByPost_Id(post.getId());
+        long commentCount = commentRepository.countByPost_Id(post.getId());
+        boolean likedByMe = likePostRepository.existsByPost_IdAndUser_Id(post.getId(), userId);
+
+        return new PostDetail(
+                post.getId(),
+                post.getTitle(),
+                post.getContent(),
+                post.getUser().getId(),
+                post.getUser().getUsername(),
+                post.getCreatedAt(),
+                likeCount,
+                commentCount,
+                likedByMe
+        );
     }
 
     /**게시글 삭제*/
