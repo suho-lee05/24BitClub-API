@@ -7,7 +7,7 @@ import hello.bitclubapi.post.repository.PostRepository;
 import hello.bitclubapi.user.entity.User;
 import hello.bitclubapi.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
-
+import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 
 @Service
@@ -25,6 +25,7 @@ public class LikePostService {
         this.userRepository = userRepository;
     }
 
+    @Transactional
     public void likePost(Long postId, Long userId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
@@ -39,6 +40,7 @@ public class LikePostService {
         likePostRepository.save(like);
     }
 
+    @Transactional
     public void unlikePost(Long postId, Long userId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
@@ -51,6 +53,7 @@ public class LikePostService {
         likePostRepository.delete(like);
     }
 
+    @Transactional
     public long getLikeCount(Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
