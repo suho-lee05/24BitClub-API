@@ -44,7 +44,8 @@ public class SecurityConfig {
         http
                 .cors(cors -> cors.configurationSource(request -> {
                     CorsConfiguration config = new CorsConfiguration();
-                    config.setAllowedOrigins(List.of("http://localhost:3000")); // 프론트 주소
+                    config.setAllowedOrigins(List.of("http://localhost:3000",
+                            "https://miraculous-sparkle-production.up.railway.app")); // 프론트 주소
                     config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                     config.setAllowedHeaders(List.of("*"));
                     config.setAllowCredentials(true); // Authorization 허용
@@ -54,7 +55,17 @@ public class SecurityConfig {
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // ★ 추가
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .requestMatchers("/api/**").permitAll() // 로그인/회원가입 엔드포인트
+                        .requestMatchers(
+                                "/",
+                                "/index.html",
+                                "/static/**",
+                                "/*.ico",
+                                "/*.png",
+                                "/*.jpg",
+                                "/*.json",
+                                "/favicon.ico"
+                        ).permitAll()
+                        .requestMatchers("/api/**","/", "/index.html", "/static/**").permitAll() // 로그인/회원가입 엔드포인트
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
