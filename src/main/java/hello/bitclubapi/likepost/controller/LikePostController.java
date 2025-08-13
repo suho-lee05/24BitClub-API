@@ -45,14 +45,11 @@ public class LikePostController {
     }
 
     @GetMapping("/{postId}/liked-by-me")
-    public Map<String, Boolean> likedByMe(@PathVariable Long postId,
-                                          Authentication authentication) {
-        // ★ 여기! findByUsername 사용
-        User me = userRepository.findByUsername(authentication.getName())
-                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
-        boolean liked = likePostRepository.existsByPost_IdAndUser_Id(postId, me.getId());
+    public Map<String, Boolean> likedByMe(@PathVariable Long postId, @RequestHeader("X-USER-ID") Long userId) {
+        boolean liked = (userId != null) && likePostService.likedByMe(postId, userId);
         return Map.of("likedByMe", liked);
     }
+
 
 
 }
