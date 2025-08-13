@@ -59,4 +59,11 @@ public class LikePostService {
                 .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
         return likePostRepository.countByPost(post);
     }
+
+    @Transactional(readOnly = true)
+    public boolean likedByMe(Long postId, Long userId) {
+        if (userId == null) return false; // 비로그인이면 false
+        return likePostRepository.existsByPost_IdAndUser_Id(postId, userId);
+    }
+
 }
