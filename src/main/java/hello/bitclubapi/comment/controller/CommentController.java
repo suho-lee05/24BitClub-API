@@ -30,8 +30,20 @@ public class CommentController {
     /** 2) 댓글 작성 */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Comment create (@PathVariable Long postId, @RequestHeader("X-USER-ID") Long userId, @RequestBody String content) {
-        return commentService.addComment(userId, postId, content);
+    public CommentDto  create (@PathVariable Long postId, @RequestHeader("X-USER-ID") Long userId, @RequestBody String content) {
+        Comment c = commentService.addComment(userId, postId, content);
+        return toDto(c, userId);
+    }
+
+    private CommentDto toDto(Comment c, Long viewerUserId) {
+        CommentDto dto = new CommentDto();
+        dto.setCommentId(c.getId());
+        dto.setUserId(c.getUser().getId());
+        dto.setUsername(c.getUser().getUsername());
+        dto.setContent(c.getContent());
+        dto.setCreatedAt(c.getCreatedAt());    // 엔티티에서 세팅해두기
+        dto.setMine(c.getUser().getId().equals(viewerUserId));
+        return dto;
     }
 
     /** 3) 댓글 수정 */

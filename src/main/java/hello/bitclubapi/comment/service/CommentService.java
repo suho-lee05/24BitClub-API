@@ -47,6 +47,7 @@ public class CommentService {
        comment.setUser(user);
        comment.setPost(post);
        comment.setContent(content);
+       comment.setCreatedAt(LocalDateTime.now()); // ★ 직렬화용 필드 채우기
        return commentRepository.save(comment);
    }
 
