@@ -45,7 +45,8 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(request -> {
                     CorsConfiguration config = new CorsConfiguration();
                     config.setAllowedOrigins(List.of("http://localhost:3000",
-                            "https://dododokk.github.io/24BitClub-React")); // 프론트 주소
+                            "https://dododokk.github.io/24BitClub-React",
+                            "https://dododokk.github.io")); // 프론트 주소
                     config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                     config.setAllowedHeaders(List.of("*"));
                     config.setAllowCredentials(true); // Authorization 허용
